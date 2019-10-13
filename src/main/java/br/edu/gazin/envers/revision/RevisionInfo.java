@@ -3,7 +3,6 @@ package br.edu.gazin.envers.revision;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.TimeZone;
 
 import javax.persistence.Column;
@@ -21,25 +20,27 @@ import org.springframework.data.annotation.LastModifiedBy;
 
 @Entity
 @Table(name = "revinfo", schema = "envers_schema")
-@RevisionEntity(UserRevisionListener.class)
+@RevisionEntity(RevisionInfoListener.class)
 //@EntityListeners(AuditingEntityListener.class)
-public class UserRevEntity implements Serializable {
+public class RevisionInfo implements Serializable {
 	private static final long serialVersionUID = 210798494749422L;
 
 	@Id
 	@GeneratedValue
 	@RevisionNumber
-	@Column(name = "rev")
-	private int id;
+	@Column(name = "revision_number")
+	private int revisionNumber;
 
 	@RevisionTimestamp
+	@Column(name = "revision_timestamp")
 	private long revtstmp;
 
 	@LastModifiedBy
+	@Column(name = "user_name")
 	private String username;
 
-	public int getId() {
-		return id;
+	public int getRevisionNumber() {
+		return revisionNumber;
 	}
 
 	public long getRevtstmp() {
@@ -68,14 +69,14 @@ public class UserRevEntity implements Serializable {
 			return false;
 		}
 
-		final UserRevEntity that = (UserRevEntity) o;
-		return id == that.id && revtstmp == that.revtstmp;
+		final RevisionInfo that = (RevisionInfo) o;
+		return revisionNumber == that.revisionNumber && revtstmp == that.revtstmp;
 	}
 
 	@Override
 	public int hashCode() {
 		int result;
-		result = id;
+		result = revisionNumber;
 		result = 31 * result + (int) (revtstmp ^ (revtstmp >>> 32));
 		return result;
 	}

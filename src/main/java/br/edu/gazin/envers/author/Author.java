@@ -1,4 +1,4 @@
-package br.edu.gazin.envers.book;
+package br.edu.gazin.envers.author;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -8,22 +8,17 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import br.edu.gazin.envers.author.Author;
 
 @EntityListeners(AuditingEntityListener.class)
 @Audited
 @Entity
-@Table(name = "\"Book\"", schema = "envers_schema")
-public class Book implements Serializable {
-	private static final long serialVersionUID = -8198205199378186112L;
+@Table(name = "\"Author\"", schema = "envers_schema")
+public class Author implements Serializable {
+	private static final long serialVersionUID = -2132539042787529741L;
 
 	@Id
 	@GeneratedValue
@@ -32,11 +27,6 @@ public class Book implements Serializable {
 
 	@Column(name = "name", length = 60, nullable = true)
 	private String name;
-
-	@NotAudited
-	@ManyToOne
-	@JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
-	private Author author;
 
 	public UUID getId() {
 		return id;
@@ -53,13 +43,4 @@ public class Book implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public Author getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(Author author) {
-		this.author = author;
-	}
-
 }
