@@ -1,5 +1,6 @@
 package br.edu.gazin.envers.book;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,6 +52,7 @@ public class BookApi {
 		Book book = new Book();
 		book.setName(RandomString.make(10));
 		book.setAuthor(optional.get());
+		book.setCreatedAt(LocalDateTime.now());
 		Book saved = repository.save(book);
 
 		return new ResponseEntity<>(saved, HttpStatus.CREATED);

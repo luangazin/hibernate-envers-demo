@@ -6,7 +6,7 @@ plugins {
 
 group = 'br.edu.gazin'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 configurations {
 	developmentOnly
@@ -45,5 +45,7 @@ dependencies {
     
     //ENVERS
    implementation 'org.hibernate:hibernate-envers'
+   
+   compile 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
 	
 }

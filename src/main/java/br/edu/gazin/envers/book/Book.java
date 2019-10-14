@@ -1,6 +1,9 @@
 package br.edu.gazin.envers.book;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -14,7 +17,10 @@ import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.edu.gazin.envers.author.Author;
 
@@ -37,6 +43,11 @@ public class Book implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
 	private Author author;
+
+	@CreatedDate
+	@Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ", timezone = "UTC")
+	private LocalDateTime createdAt;
 
 	public UUID getId() {
 		return id;
@@ -62,4 +73,20 @@ public class Book implements Serializable {
 		this.author = author;
 	}
 
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public static void main(String[] args) {
+		System.out.println("Running example with ZonedDateTime class.");
+		ZoneId brisbane = ZoneId.of("UTC");
+		LocalDateTime dateTime = LocalDateTime.now();
+		ZonedDateTime now = ZonedDateTime.of(dateTime, brisbane);
+		System.out.println(now);
+		System.out.println(dateTime);
+	}
 }
