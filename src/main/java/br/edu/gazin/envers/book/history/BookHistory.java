@@ -8,11 +8,13 @@ public class BookHistory {
 	private final Book book;
 	private final Number revision;
 	private final RevisionType revisionType;
+	private final String username;
 
-	public BookHistory(Book book, Number revision, RevisionType revisionType) {
+	public BookHistory(Book book, Number revision, RevisionType revisionType, String username) {
 		this.book = book;
 		this.revision = revision;
 		this.revisionType = revisionType;
+		this.username = username;
 	}
 
 	public Book getBook() {
@@ -25,5 +27,9 @@ public class BookHistory {
 
 	public RevisionType getRevisionType() {
 		return revisionType;
+	}
+
+	public String getUsername() {
+		return username;
 	}
 }

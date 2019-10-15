@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionNumber;
@@ -19,66 +21,71 @@ import org.hibernate.envers.RevisionTimestamp;
 import org.springframework.data.annotation.LastModifiedBy;
 
 @Entity
-@Table(name = "revinfo", schema = "envers_schema")
+@Table(name = "\"RevisionInfo\"")
 @RevisionEntity(RevisionInfoListener.class)
-//@EntityListeners(AuditingEntityListener.class)
 public class RevisionInfo implements Serializable {
 	private static final long serialVersionUID = 210798494749422L;
 
-	@Id
-	@GeneratedValue
-	@RevisionNumber
-	@Column(name = "revision_number")
-	private int revisionNumber;
+    @Id
+    @GeneratedValue(generator = "RevisionNumberSequenceGenerator")
+    @GenericGenerator(name = "RevisionNumberSequenceGenerator", strategy = "org.hibernate.envers.enhanced.OrderedSequenceGenerator", parameters = {
+            @Parameter(name = "table_name", value = "revinfo"),
+            @Parameter(name = "sequence_name", value = "revision_generator_seq"),
+            @Parameter(name = "initial_value", value = "1"), 
+            @Parameter(name = "increment_size", value = "1") })
+    @RevisionNumber
+    @Column(name = "revision_number")
+    private long revisionNumber;
 
-	@RevisionTimestamp
-	@Column(name = "revision_timestamp")
-	private long revtstmp;
+    @RevisionTimestamp
+    @Column(name = "revision_timestamp")
+    private long revtstmp;
 
-	@LastModifiedBy
-	@Column(name = "user_name")
-	private String username;
+    @LastModifiedBy
+    @Column(name = "user_name")
+    private String username;
 
-	public int getRevisionNumber() {
-		return revisionNumber;
-	}
+    public long getRevisionNumber() {
+        return revisionNumber;
+    }
 
-	public long getRevtstmp() {
-		return revtstmp;
-	}
+    public long getRevtstmp() {
+        return revtstmp;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	@Transient
-	public LocalDateTime getRevisionDate() {
-		return LocalDateTime.ofInstant(Instant.ofEpochMilli(revtstmp), TimeZone.getDefault().toZoneId());
-	}
+    @Transient
+    public LocalDateTime getRevisionDate() {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(revtstmp), TimeZone.getDefault().toZoneId());
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof DefaultRevisionEntity)) {
-			return false;
-		}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DefaultRevisionEntity)) {
+            return false;
+        }
 
-		final RevisionInfo that = (RevisionInfo) o;
-		return revisionNumber == that.revisionNumber && revtstmp == that.revtstmp;
-	}
+        final RevisionInfo that = (RevisionInfo) o;
+        return revisionNumber == that.revisionNumber && revtstmp == that.revtstmp;
+    }
 
-	@Override
-	public int hashCode() {
-		int result;
-		result = revisionNumber;
-		result = 31 * result + (int) (revtstmp ^ (revtstmp >>> 32));
-		return result;
-	}
-
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (revisionNumber ^ (revisionNumber >>> 32));
+        result = prime * result + (int) (revtstmp ^ (revtstmp >>> 32));
+        return result;
+    }
+	
 }

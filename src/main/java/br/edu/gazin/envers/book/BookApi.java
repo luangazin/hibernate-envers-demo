@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -68,13 +70,14 @@ public class BookApi {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
+	@Transactional
 	@PutMapping(value = "/books/{book-id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public HttpEntity<Book> putBooks(@PathVariable("book-id") UUID id) {
 		 Optional<Book> optional = repository.findById(id);
 		 if(!optional.isPresent()) 
 			 new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		 Book book = optional.get();
-		 book.setName("Altered - "+Integer.max(1, 9999999));
+		 book.setName("Altered - "+(Math.random() * ( 1 - 99999999 )) + 1 );
 		 Book book2 = repository.save(book);
 		 
 		return new ResponseEntity<>(book2, HttpStatus.OK);
