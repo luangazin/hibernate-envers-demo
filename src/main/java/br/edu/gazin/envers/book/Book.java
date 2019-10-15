@@ -46,7 +46,6 @@ public class Book implements Serializable {
 
 	@CreatedDate
 	@Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ", timezone = "UTC")
 	private LocalDateTime createdAt;
 
 	public UUID getId() {
